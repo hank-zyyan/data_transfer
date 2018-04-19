@@ -1,0 +1,114 @@
+spring:
+    datasource:
+        original:
+            name: terrydr_dev
+            url: jdbc:mysql://rm-bp1222yv6o99t3y76.mysql.rds.aliyuncs.com:3306/terrydr_pro?useUnicode=true&amp;characterEncoding=UTF-8
+            username: terrydr_pro
+            password: Terrydr2017
+            # 使用druid数据源
+            type: com.alibaba.druid.pool.DruidDataSource
+            driver-class-name: com.mysql.jdbc.Driver
+            filters: stat
+            maxActive: 20
+            initialSize: 1
+            maxWait: 60000
+            minIdle: 1
+            timeBetweenEvictionRunsMillis: 60000
+            minEvictableIdleTimeMillis: 300000
+            validationQuery: select 'x'
+            testWhileIdle: true
+            testOnBorrow: false
+            testOnReturn: false
+            poolPreparedStatements: true
+            maxOpenPreparedStatements: 20
+        basic:
+            name: basic_dev
+            url: jdbc:mysql://rm-bp1222yv6o99t3y76.mysql.rds.aliyuncs.com:3306/basic_pro?useUnicode=true&amp;characterEncoding=UTF-8
+            username: terrydr_pro
+            password: Terrydr2017
+            # 使用druid数据源
+            type: com.alibaba.druid.pool.DruidDataSource
+            driver-class-name: com.mysql.jdbc.Driver
+            filters: stat
+            maxActive: 20
+            initialSize: 1
+            maxWait: 60000
+            minIdle: 1
+            timeBetweenEvictionRunsMillis: 60000
+            minEvictableIdleTimeMillis: 300000
+            validationQuery: select 'x'
+            testWhileIdle: true
+            testOnBorrow: false
+            testOnReturn: false
+            poolPreparedStatements: true
+            maxOpenPreparedStatements: 20
+        ecg:
+            name: ecg_dev
+            url: jdbc:mysql://rm-bp1222yv6o99t3y76.mysql.rds.aliyuncs.com:3306/ecg_pro?useUnicode=true&amp;characterEncoding=UTF-8
+            username: terrydr_pro
+            password: Terrydr2017
+            # 使用druid数据源
+            type: com.alibaba.druid.pool.DruidDataSource
+            driver-class-name: com.mysql.jdbc.Driver
+            filters: stat
+            maxActive: 20
+            initialSize: 1
+            maxWait: 60000
+            minIdle: 1
+            timeBetweenEvictionRunsMillis: 60000
+            minEvictableIdleTimeMillis: 300000
+            validationQuery: select 'x'
+            testWhileIdle: true
+            testOnBorrow: false
+            testOnReturn: false
+            poolPreparedStatements: true
+            maxOpenPreparedStatements: 20
+        eye:
+            name: eye_dev
+            url: jdbc:mysql://rm-bp1222yv6o99t3y76.mysql.rds.aliyuncs.com:3306/eye_pro?useUnicode=true&amp;characterEncoding=UTF-8
+            username: terrydr_pro
+            password: Terrydr2017
+            # 使用druid数据源
+            type: com.alibaba.druid.pool.DruidDataSource
+            driver-class-name: com.mysql.jdbc.Driver
+            filters: stat
+            maxActive: 20
+            initialSize: 1
+            maxWait: 60000
+            minIdle: 1
+            timeBetweenEvictionRunsMillis: 60000
+            minEvictableIdleTimeMillis: 300000
+            validationQuery: select 'x'
+            testWhileIdle: true
+            testOnBorrow: false
+            testOnReturn: false
+            poolPreparedStatements: true
+            maxOpenPreparedStatements: 20
+        pathology:
+            name: pathology_dev
+            url: jdbc:mysql://rm-bp1222yv6o99t3y76.mysql.rds.aliyuncs.com:3306/pathology_pro?useUnicode=true&amp;characterEncoding=UTF-8
+            username: terrydr_pro
+            password: Terrydr2017
+            # 使用druid数据源
+            type: com.alibaba.druid.pool.DruidDataSource
+            driver-class-name: com.mysql.jdbc.Driver
+            filters: stat
+            maxActive: 20
+            initialSize: 1
+            maxWait: 60000
+            minIdle: 1
+            timeBetweenEvictionRunsMillis: 60000
+            minEvictableIdleTimeMillis: 300000
+            validationQuery: select 'x'
+            testWhileIdle: true
+            testOnBorrow: false
+            testOnReturn: false
+            poolPreparedStatements: true
+            maxOpenPreparedStatements: 20
+
+#pagehelper分页插件
+pagehelper:
+    helperDialect: mysql
+    reasonable: true
+    supportMethodsArguments: true
+    params: count=countSql
