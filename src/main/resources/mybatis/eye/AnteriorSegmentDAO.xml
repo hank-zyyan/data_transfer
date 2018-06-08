@@ -73,6 +73,64 @@
     delete from t_anterior_segment
   </delete>
 
+  <update id="drop">
+    DROP TABLE IF EXISTS t_anterior_segment
+  </update>
+
+  <update id="createTable">
+    CREATE TABLE `t_anterior_segment` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '主键ID',
+  `encrypt_id` varchar(64) DEFAULT NULL COMMENT '加密ID',
+  `encounter_id` int(11) DEFAULT NULL COMMENT '就诊记录ID',
+  `encounter_encrypt_id` varchar(64) DEFAULT NULL COMMENT '加密的就诊记录ID',
+  `left_img` varchar(512) DEFAULT NULL COMMENT '左眼图片',
+  `right_img` varchar(512) DEFAULT NULL COMMENT '右眼图片',
+  `left_video` varchar(64) DEFAULT NULL COMMENT '左眼视频',
+  `right_video` varchar(64) DEFAULT NULL COMMENT '右眼视频',
+  `collect_file` varchar(512) DEFAULT NULL COMMENT '图像采集',
+  `l_mydriasis` int(1) DEFAULT NULL COMMENT '左眼是否散瞳（0.未散瞳   1.已散瞳）',
+  `r_mydriasis` int(1) DEFAULT NULL COMMENT '右眼是否散瞳（0.未散瞳   1.已散瞳）',
+  `l_conjunctiva` varchar(8) DEFAULT NULL COMMENT '左眼结膜（1.正常  2.充血水肿 3.乳头滤泡  4.假膜 5.睫状充血 6.混合型充血 7.翼状胬肉 9.其他）',
+  `r_conjunctiva` varchar(8) DEFAULT NULL COMMENT '右眼结膜（1.正常  2.充血水肿 3.乳头滤泡  4.假膜 5.睫状充血 6.混合型充血 7.翼状胬肉 9.其他）',
+  `l_cornea` varchar(8) DEFAULT NULL COMMENT '左眼角膜（1.透明  2.新生血管 3.上皮脱落  4.浸润 5.溃疡 6.水肿 7.后弹力层褶皱 8.大泡 9.云翳 10.瘢痕 11.变性 99.其他）',
+  `r_cornea` varchar(8) DEFAULT NULL COMMENT '右眼角膜（1.透明  2.新生血管 3.上皮脱落  4.浸润 5.溃疡 6.水肿 7.后弹力层褶皱 8.大泡 9.云翳 10.瘢痕 11.变性 99.其他）',
+  `l_anterior_chamber_depth` varchar(8) DEFAULT NULL COMMENT '左眼前房深度（1.正常  2.浅 3.深  9.其他）',
+  `r_anterior_chamber_depth` varchar(8) DEFAULT NULL COMMENT '右眼前房深度（1.正常  2.浅 3.深  9.其他）',
+  `l_anterior_chamber_status` varchar(8) DEFAULT NULL COMMENT '左眼前房状况（1.清 2.闪辉  3.渗出 4.细胞 5.积脓 6.积血 9.其他）',
+  `r_anterior_chamber_status` varchar(8) DEFAULT NULL COMMENT '右眼前房状况（1.清 2.闪辉  3.渗出 4.细胞 5.积脓 6.积血 9.其他）',
+  `l_iris` varchar(8) DEFAULT NULL COMMENT '左眼虹膜（1.纹理清晰  2 纹理不清晰 3.节段性萎缩  4.异色 5. 结节  6.新生血管 7.残膜  8.根不离断 9.其他）',
+  `r_iris` varchar(8) DEFAULT NULL COMMENT '右眼虹膜（1.纹理清晰  2 纹理不清晰 3.节段性萎缩  4.异色 5. 结节  6.新生血管 7.残膜  8.根不离断 9.其他）',
+  `l_pupil_diameter` float(3,2) DEFAULT NULL COMMENT '左眼瞳孔直径（单位mm）',
+  `r_pupil_diameter` float(3,2) DEFAULT NULL COMMENT '右眼瞳孔直径（单位mm）',
+  `l_pupil_status` varchar(8) DEFAULT NULL COMMENT '左眼瞳孔状况（1.圆  2.不规则  3.移位 4.后粘连  5.多瞳 6.闭锁  7.膜闭 9.其他）',
+  `r_pupil_status` varchar(8) DEFAULT NULL COMMENT '右眼瞳孔状况（1.圆  2.不规则  3.移位 4.后粘连  5.多瞳 6.闭锁  7.膜闭 9.其他）',
+  `l_pupil_direct_light_reflection` int(1) DEFAULT NULL COMMENT '左眼瞳孔直接对光反射（1.正常  2.迟钝  3.消失）',
+  `r_pupil_direct_light_reflection` int(1) DEFAULT NULL COMMENT '右眼瞳孔直接对光反射（1.正常  2.迟钝  3.消失）',
+  `l_pupil_indirect_light_reflection` int(1) DEFAULT NULL COMMENT '左眼瞳孔间接对光反射（1.正常  2.迟钝  3.消失）',
+  `r_pupil_indirect_light_reflection` int(1) DEFAULT NULL COMMENT '右眼瞳孔间接对光反射（1.正常  2.迟钝  3.消失）',
+  `l_pupil_rapd` int(1) DEFAULT NULL COMMENT '左眼瞳孔RAPD（1.阴性  2.阳性）',
+  `r_pupil_rapd` int(1) DEFAULT NULL COMMENT '右眼瞳孔RAPD（1.阴性  2.阳性）',
+  `l_lens` int(1) DEFAULT NULL COMMENT '左眼晶状体（1.透明  2.皮质浑浊 3.核浑浊 4.后囊浑浊 5.人工晶体）',
+  `r_lens` int(1) DEFAULT NULL COMMENT '右眼晶状体（1.透明  2.皮质浑浊 3.核浑浊 4.后囊浑浊 5.人工晶体）',
+  `l_nucleus_chaos_lev` int(1) DEFAULT NULL COMMENT '左眼核浑浊分级（1.Ⅰ级   2.Ⅱ级  3.Ⅲ级 4.Ⅳ级  5.Ⅴ级），晶状体选择“核浑浊”时录入',
+  `r_nucleus_chaos_lev` int(1) DEFAULT NULL COMMENT '右眼核混沌分级（1.Ⅰ级   2.Ⅱ级  3.Ⅲ级 4.Ⅳ级  5.Ⅴ级），晶状体选择“核浑浊”时录入',
+  `l_intraocular_lens` int(1) DEFAULT NULL COMMENT '左眼人工晶体（1.IOL在位  2.IOL移位  3.无晶体）,晶状体选择“人工晶体”时录入',
+  `r_intraocular_lens` int(1) DEFAULT NULL COMMENT '右眼人工晶体（1.IOL在位  2.IOL移位  3.无晶体）,晶状体选择“人工晶体”时录入',
+  `l_vitreum` varchar(8) DEFAULT NULL COMMENT '左眼玻璃体（1.清  2.浑浊  3.闪辉 4.细胞 5.出血 6.PVD 9.其他）',
+  `r_vitreum` varchar(8) DEFAULT NULL COMMENT '右眼玻璃体（1.清  2.浑浊  3.闪辉 4.细胞 5.出血 6.PVD 9.其他）',
+  `cover` varchar(128) DEFAULT NULL COMMENT '检查封面',
+  `remark` varchar(1024) DEFAULT NULL COMMENT '备注',
+  `report_status` int(1) DEFAULT '0' COMMENT '0未出报告，1已出报告',
+  `note` varchar(1024) DEFAULT NULL COMMENT '检查简述',
+  `create_time` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `last_update_time` datetime DEFAULT CURRENT_TIMESTAMP,
+  `is_delete` int(1) DEFAULT '0' COMMENT '删除标志（0：未删除，1：已删除）',
+  PRIMARY KEY (`id`),
+  KEY `fk_anterior_segment_encounter_record_idx` (`encounter_id`) USING BTREE,
+  CONSTRAINT `fk_encounter_anterior_segment` FOREIGN KEY (`encounter_id`) REFERENCES `t_encounter` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='眼前节检查';
+  </update>
+
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     <!--
       WARNING - @mbg.generated

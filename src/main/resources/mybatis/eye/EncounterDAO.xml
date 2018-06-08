@@ -46,6 +46,38 @@
     delete from t_encounter
   </delete>
 
+  <update id="drop">
+    DROP TABLE IF EXISTS t_encounter
+  </update>
+
+  <update id="createTable">
+CREATE TABLE `t_encounter` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `encrypt_id` varchar(64) DEFAULT NULL COMMENT '加密ID',
+  `customer_id` int(11) DEFAULT NULL COMMENT '患者ID',
+  `customer_encrypt_id` varchar(64) DEFAULT NULL COMMENT '加密的患者ID',
+  `eye_type` int(1) DEFAULT NULL COMMENT '眼睛类型（1：左眼，2：右眼，3：双眼）',
+  `symptom` varchar(512) DEFAULT NULL COMMENT '症状',
+  `duration` varchar(16) DEFAULT NULL COMMENT '持续时间',
+  `doctor_id` int(11) DEFAULT NULL COMMENT '创建就诊记录的医生ID',
+  `doctor_name` varchar(32) DEFAULT NULL COMMENT '创建就诊记录的医生名称',
+  `doctor_teleno` varchar(11) DEFAULT NULL COMMENT '创建就诊记录的医生手机号码',
+  `doctor_avatar` varchar(256) DEFAULT NULL COMMENT '创建就诊记录的医生头像',
+  `hospital_id` int(11) DEFAULT NULL COMMENT '医院ID',
+  `hospital_name` varchar(64) DEFAULT NULL COMMENT '医院名称',
+  `department_id` int(11) DEFAULT '0' COMMENT '所属科室',
+  `department_name` varchar(32) DEFAULT '其他' COMMENT '科室名称',
+  `cover` varchar(128) DEFAULT NULL COMMENT '就诊记录封面',
+  `visit_date` date DEFAULT NULL COMMENT '就诊日期',
+  `create_time` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `last_update_time` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '最后更新时间',
+  `is_delete` int(1) DEFAULT '0' COMMENT '删除标志（0：未删除，1：已删除）',
+  PRIMARY KEY (`id`),
+  KEY `fk_encounter_customer_idx` (`customer_id`) USING BTREE,
+  CONSTRAINT `fk_customer_encounter` FOREIGN KEY (`customer_id`) REFERENCES `t_customer` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='就诊记录';
+  </update>
+
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     <!--
       WARNING - @mbg.generated

@@ -466,7 +466,7 @@
         is_deleted = #{isDeleted,jdbcType=INTEGER},
       </if>
     </set>
-    where examine_id = #{report_id,jdbcType=INTEGER}
+    where examine_id = #{reportId,jdbcType=INTEGER}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.terrydr.domain.eye.Report">
     <!--

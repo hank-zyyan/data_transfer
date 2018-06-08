@@ -81,6 +81,70 @@
     delete from t_customer
   </delete>
 
+  <update id="drop">
+    DROP TABLE IF EXISTS t_customer
+  </update>
+
+  <update id="createTable">
+CREATE TABLE `t_customer` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '主键ID',
+  `encrypt_id` varchar(64) DEFAULT NULL COMMENT '加密ID',
+  `name` varchar(32) DEFAULT NULL COMMENT '患者姓名',
+  `sex` int(1) DEFAULT '0' COMMENT '患者性别（0男，1女）',
+  `birthday` date DEFAULT NULL COMMENT '生日',
+  `teleno` varchar(11) DEFAULT NULL COMMENT '患者手机号码',
+  `id_card` varchar(32) DEFAULT NULL COMMENT '身份证号码',
+  `lp_prov_id` varchar(8) DEFAULT NULL COMMENT '居住地省份ID',
+  `lp_prov_name` varchar(16) DEFAULT NULL COMMENT '居住地省份',
+  `lp_city_id` varchar(8) DEFAULT NULL COMMENT '居住地城市ID',
+  `lp_city_name` varchar(16) DEFAULT NULL COMMENT '居住地城市',
+  `lp_area_id` varchar(8) DEFAULT NULL COMMENT '居住地区ID',
+  `lp_area_name` varchar(16) DEFAULT NULL COMMENT '居住地区',
+  `live_place` varchar(128) DEFAULT NULL COMMENT '居住地详细地址',
+  `hr_prov_id` varchar(8) DEFAULT NULL COMMENT '户籍省份ID',
+  `hr_prov_name` varchar(16) DEFAULT NULL COMMENT '户籍省份',
+  `hr_city_id` varchar(8) DEFAULT NULL COMMENT '户籍城市ID',
+  `hr_city_name` varchar(16) DEFAULT NULL COMMENT '户籍城市',
+  `hr_area_id` varchar(8) DEFAULT NULL COMMENT '户籍区域ID',
+  `hr_area_name` varchar(16) DEFAULT NULL COMMENT '户籍区域',
+  `household_register` varchar(256) DEFAULT NULL COMMENT '户籍地址详细地址',
+  `medical_card_type` int(1) DEFAULT NULL COMMENT '就医卡类型(1：医保卡，2：本院就诊卡)',
+  `medical_card_id` varchar(32) DEFAULT NULL COMMENT '就医卡卡号',
+  `nation_id` int(2) DEFAULT NULL COMMENT '名族ID',
+  `nation_name` varchar(16) DEFAULT NULL COMMENT '民族',
+  `occupation` varchar(16) DEFAULT NULL COMMENT '职业',
+  `employment_situation` varchar(128) DEFAULT NULL COMMENT '从业情况',
+  `education_levels` int(1) DEFAULT NULL COMMENT '文化程度(1：小学、2：初中、3：高中、4：本科、5：硕士、6：博士)',
+  `marital_status` int(1) DEFAULT NULL COMMENT '婚姻状况(1：已婚、2：未婚、3：离异)',
+  `doctor_id` int(11) DEFAULT NULL COMMENT '创建患者的医生ID',
+  `doctor_name` varchar(32) DEFAULT NULL COMMENT '创建患者的医生姓名',
+  `hospital_id` int(11) DEFAULT NULL COMMENT '创建患者医生所在医院ID',
+  `hospital_name` varchar(128) DEFAULT NULL COMMENT '创建患者医生所在医院名称',
+  `create_time` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `patient_id` int(11) DEFAULT NULL COMMENT '基础表里患者表患者ID',
+  `is_diabetes` int(1) DEFAULT NULL COMMENT '是否有糖尿病（0：否，1：是）',
+  `diabetes_diagnosis_date` date DEFAULT NULL COMMENT '糖尿病确诊时间',
+  `diabetes_status` int(1) DEFAULT NULL COMMENT '血糖控制情况（1:低，2:良好，3:高）',
+  `is_hypertension` int(1) DEFAULT NULL COMMENT '是否有高血压（0：否，1：是）',
+  `hypertension_diagnosis_date` date DEFAULT NULL COMMENT '高血压确诊时间',
+  `hypertension_status` int(1) DEFAULT NULL COMMENT '血压控制情况（1：低，2：良好，3：高）',
+  `diseases_other` varchar(256) DEFAULT NULL COMMENT '其他疾病史',
+  `oculo_is_glaucoma` int(1) DEFAULT NULL COMMENT '眼病史是否有青光眼（0：否，1：是）',
+  `oculo_is_dr` int(1) DEFAULT NULL COMMENT '眼病史是否有糖尿病视网膜病变（0：否，1：是）',
+  `oculo_other` varchar(256) DEFAULT NULL COMMENT '其他眼病史',
+  `family_is_glaucoma` int(1) DEFAULT NULL COMMENT '家族史是否有青光眼（0：否，1：是）',
+  `family_is_hypertension` int(1) DEFAULT NULL COMMENT '家族史是否有高血压（0：否，1：是）',
+  `family_other` varchar(256) DEFAULT NULL COMMENT '家族史其他病史',
+  `smoke` varchar(32) DEFAULT NULL COMMENT '吸烟',
+  `drink` varchar(32) DEFAULT NULL COMMENT '喝酒',
+  `sport` varchar(32) DEFAULT NULL COMMENT '运动',
+  `electr_time` varchar(32) DEFAULT NULL COMMENT '电子产品使用时间',
+  `last_update_time` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '最后更新时间',
+  `is_delete` int(1) DEFAULT '0' COMMENT '删除标志（0：未删除，1：已删除）',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='患者信息';
+  </update>
+
   <select id="getEncryptId" parameterType="java.lang.Integer" resultType="string">
     select
     encrypt_id

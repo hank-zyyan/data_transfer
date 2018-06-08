@@ -6,6 +6,7 @@ import com.terrydr.domain.eye.*;
 import com.terrydr.service.EYEDataService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -60,15 +61,38 @@ public class EYEDataServiceImpl implements EYEDataService {
     @Resource
     private ScreenIntervalDAO screenIntervalDAO;
 
+    @Value("${spring.profiles.active}")
+    private String profiles;
+
     @Override
     public void importCommonData() {
         logger.info("开始迁移眼科数据...");
 
-        Map<Integer, Integer> map1 = new HashMap<Integer, Integer>();
+        Map<String, Integer> map1 = new HashMap<String, Integer>();
 
-        Map<Long, Integer> map2 = new HashMap<Long, Integer>();
+        Map<String, Integer> map2 = new HashMap<String, Integer>();
 
         logger.info("Step0:清空目标数据库数据");
+        try {
+            generalExaminationDAO.dropAll();
+            generalExaminationDAO.dropOptometry();
+            generalExaminationDAO.dropVisionExam();
+            anteriorSegmentDAO.drop();
+            fundusDAO.drop();
+            encounterDAO.drop();
+            customerDAO.drop();
+
+            customerDAO.createTable();
+            encounterDAO.createTable();
+            generalExaminationDAO.createTableAll();
+            generalExaminationDAO.createTableOptometry();
+            generalExaminationDAO.createTableVisionExam();
+            anteriorSegmentDAO.createTable();
+            fundusDAO.createTable();
+        }catch (Exception e){
+            logger.info("表格已创建");
+        }
+
         logger.info("共清空目标数据库GeneralExamination数据：" + generalExaminationDAO.deleteAll() + "条");
         logger.info("共清空目标数据库Optometry数据：" + generalExaminationDAO.deleteOptometry() + "条");
         logger.info("共清空目标数据库VisionExam数据：" + generalExaminationDAO.deleteVisionExam() + "条");
@@ -77,14 +101,59 @@ public class EYEDataServiceImpl implements EYEDataService {
         logger.info("共清空目标数据库Encounter数据：" + encounterDAO.deleteAll() + "条");
         logger.info("共清空目标数据库Customer数据：" + customerDAO.deleteAll() + "条");
 
-        logger.info("Step1:迁移数据");
-        List<Detail> details = medicalRecordDAO.selectDetails();
+        logger.info("Step1:更新表结构");
+        try {
+            generalExaminationDAO.modifyAITask();
+        }catch (Exception e){
+            e.printStackTrace();
+            logger.info("AITask表已更新");
+        }
+        try {
+            generalExaminationDAO.modifyConsultation();
+        }catch (Exception e){
+            e.printStackTrace();
+            logger.info("Consultation表已更新");
+        }
+        try {
+            generalExaminationDAO.modifyReport();
+        }catch (Exception e){
+            e.printStackTrace();
+            logger.info("Report表已更新");
+        }
+        try {
+            generalExaminationDAO.modifyScreenInterval();
+        }catch (Exception e){
+            e.printStackTrace();
+            logger.info("ScreenInterval表已更新");
+        }
+
+        try {
+            generalExaminationDAO.modifyAIResult();
+        }catch (Exception e){
+            e.printStackTrace();
+            logger.info("AIResult表已更新");
+        }
+
+        logger.info("Step2:迁移数据");
+        List<Detail> details = null;
+        if("pro".equals(profiles)){
+            details = medicalRecordDAO.selectDetailsPro();
+            logger.info("Step1:迁移数据（PRO）");
+        }else if("beta".equals(profiles)){
+            details = medicalRecordDAO.selectDetailsTest();
+            logger.info("Step1:迁移数据（BETA）");
+        }else if("dev".equals(profiles)){
+            details = medicalRecordDAO.selectDetailsDev();
+            logger.info("Step1:迁移数据（DEV）");
+        }else{
+            return;
+        }
         for (Detail detail : details) {
-            int pid = detail.getPatientId() == null ? 0 : detail.getPatientId();
-            int did = detail.getDoctorId() == null ? 0 : detail.getDoctorId();
-            Integer pdId = pid + did;
-            long md = detail.getMedicalDate().getTime() / (1000 * 3600 * 24);
-            Long pdtId = md + pdId;
+            String pid = detail.getPatientId() == null ? "NULL" : detail.getPatientId().toString();
+            String did = detail.getDoctorId() == null ? "NULL" : detail.getDoctorId().toString();
+            String pdId = pid + "-" +  did;
+            String md = String.valueOf(detail.getMedicalDate().getTime() / (1000 * 3600 * 24));
+            String pdtId = md + "-" + pdId;
 
 //            logger.info("Step1-1:创建customer和encounter");
             if (detail.getPatientId() == null || map1.get(pdId) == null) { //pid为null或pdid不存在于map
@@ -106,14 +175,16 @@ public class EYEDataServiceImpl implements EYEDataService {
                         GeneralExamination generalExamination = createGeneralExamination(detail, eId, ecptId);
                         generalExaminationDAO.insertSelective(generalExamination);
                     }
-                    if (detail.getType() == 4){
+                    if (detail.getType() == 23){
                         Fundus fundus = createFundus(detail, eId, ecptId);
-                        Integer fId = fundusDAO.insertSelective(fundus);
-                        updateRelated(detail.getRecordId(),fId, 4, fundus.getEncryptId(), eId, ecptId, cId, ccptId);
-                    }else if(detail.getType() == 23){
+                        fundusDAO.insertSelective(fundus);
+                        Integer fId = fundus.getId();
+                        updateRelated(detail.getRecordId(),fId, 3, fundus.getEncryptId(), eId, ecptId, cId, ccptId);
+                    }else if(detail.getType() == 4){
                         AnteriorSegment anteriorSegment = createAnteriorSegment(detail, eId, ecptId);
-                        Integer aId = anteriorSegmentDAO.insertSelective(anteriorSegment);
-                        updateRelated(detail.getRecordId(),aId, 23, anteriorSegment.getEncryptId(), eId, ecptId, cId, ccptId);
+                        anteriorSegmentDAO.insertSelective(anteriorSegment);
+                        Integer aId = anteriorSegment.getId();
+                        updateRelated(detail.getRecordId(),aId, 2, anteriorSegment.getEncryptId(), eId, ecptId, cId, ccptId);
                     }
                 }
             } else { //计算pid+did存在于map，不创建customer
@@ -136,14 +207,16 @@ public class EYEDataServiceImpl implements EYEDataService {
                     GeneralExamination generalExamination = createGeneralExamination(detail, eId, ecptId);
                     generalExaminationDAO.insertSelective(generalExamination);
                 }
-                if (detail.getType() == 4){
+                if (detail.getType() == 23){//3
                     Fundus fundus = createFundus(detail, eId, ecptId);
-                    Integer fId = fundusDAO.insertSelective(fundus);
-                    updateRelated(detail.getRecordId(),fId, 4, fundus.getEncryptId(), eId, ecptId, cId, ccptId);
-                }else if(detail.getType() == 23){
+                    fundusDAO.insertSelective(fundus);
+                    Integer fId = fundus.getId();
+                    updateRelated(detail.getRecordId(),fId, 3, fundus.getEncryptId(), eId, ecptId, cId, ccptId);
+                }else if(detail.getType() == 4){ //2
                     AnteriorSegment anteriorSegment = createAnteriorSegment(detail, eId, ecptId);
-                    Integer aId = anteriorSegmentDAO.insertSelective(anteriorSegment);
-                    updateRelated(detail.getRecordId(),aId, 23, anteriorSegment.getEncryptId(), eId, ecptId, cId, ccptId);
+                    anteriorSegmentDAO.insertSelective(anteriorSegment);
+                    Integer aId = anteriorSegment.getId();
+                    updateRelated(detail.getRecordId(),aId, 2, anteriorSegment.getEncryptId(), eId, ecptId, cId, ccptId);
                 }
             }
 
@@ -161,12 +234,14 @@ public class EYEDataServiceImpl implements EYEDataService {
         aiTask.setExamineId(examId);
         aiTask.setExamineType(examType);
         aiTask.setExamineEncryptId(examEncryptId);
+        aiTaskDAO.updateByPrimaryKeySelective(aiTask);
 
         Consultation consultation = new Consultation();
         consultation.setId(rId);
         consultation.setExamineId(examId);
         consultation.setExamineType(examType);
         consultation.setExamineEncryptId(examEncryptId);
+        consultationDAO.updateByPrimaryKeySelective(consultation);
 
         Report report = new Report();
         report.setReportId(rId);
@@ -177,11 +252,14 @@ public class EYEDataServiceImpl implements EYEDataService {
         report.setEncounterEncryptId(ecptId);
         report.setCustomerId(cId);
         report.setCustomerEncryptId(ccptId);
+        logger.info(report.toString());
+        reportDAO.updateByPrimaryKeySelective(report);
 
         ScreenInterval screenInterval = new ScreenInterval();
         screenInterval.setId(rId);
         screenInterval.setExamineId(examId);
         screenInterval.setExamineEncryptId(examEncryptId);
+        screenIntervalDAO.updateByPrimaryKeySelective(screenInterval);
     }
 
     private AnteriorSegment createAnteriorSegment(Detail detail, Integer eId, String ecptId){
@@ -197,6 +275,9 @@ public class EYEDataServiceImpl implements EYEDataService {
         fundus.setCover(detail.getMedicalCover());
         fundus.setIsDelete(detail.getIsDeleted());
         fundus.setReportStatus(detail.getReportStatus());
+        fundus.setRemark(detail.getMedicalConclusion());
+        fundus.setCreateTime(detail.getMedicalDate());
+        fundus.setLastUpdateTime(detail.getMedicalDate());
         return fundus;
     }
 
@@ -213,6 +294,9 @@ public class EYEDataServiceImpl implements EYEDataService {
         fundus.setCover(detail.getMedicalCover());
         fundus.setIsDelete(detail.getIsDeleted());
         fundus.setReportStatus(detail.getReportStatus());
+        fundus.setRemark(detail.getMedicalConclusion());
+        fundus.setCreateTime(detail.getMedicalDate());
+        fundus.setLastUpdateTime(detail.getMedicalDate());
         return fundus;
     }
 
@@ -224,6 +308,7 @@ public class EYEDataServiceImpl implements EYEDataService {
         generalExamination.setlNv(detail.getEyeLeftVision());
         generalExamination.setrNv(detail.getEyeRightVision());
         generalExamination.setCreateTime(detail.getMedicalDate());
+        generalExamination.setLastUpdateTime(detail.getMedicalDate());
         generalExamination.setIsDelete(detail.getIsDeleted());
         return generalExamination;
     }
@@ -231,40 +316,45 @@ public class EYEDataServiceImpl implements EYEDataService {
     private Customer createCustomer(Detail detail) {
         Customer customer = new Customer();
         customer.setEncryptId(Util.getEncryptId());
-        if (detail.getPatientCreatedDid() != null) {
-            customer.setDoctorId(detail.getPatientCreatedDid());
-        } else {
-            customer.setDoctorId(-1);
-        }
-        customer.setDoctorName(detail.getPatientCreatedDName());
-        customer.setHospitalId(detail.getPatientCreatedHid());
-        customer.setHospitalName(detail.getPatientCreatedHName());
+        customer.setDoctorId(detail.getDoctorId());
+        customer.setDoctorName(detail.getDoctorName());
+        customer.setHospitalId(detail.getHospitalId());
+        customer.setHospitalName(detail.getHospitalName());
         if(detail.getPatientId() == null){
-            customer.setName(detail.getRpn());
+            String n = detail.getRpn();
+            if(n == null || n.length() == 0){
+                n = "匿名";
+            }
+            customer.setName(n);
             customer.setSex(detail.getRps());
             customer.setTeleno(detail.getRpt());
         }else{
-            customer.setName(detail.getPatientName());
+            String n = detail.getPatientName();
+            if(n == null || n.length() == 0){
+                n = "匿名";
+            }
+            customer.setName(n);
             customer.setSex(detail.getPatientSex());
             customer.setBirthday(detail.getPatientBirthday());
             customer.setTeleno(detail.getPatientTeleno());
             customer.setPatientId(detail.getPatientId());
         }
-        customer.setCreateTime(detail.getPatientRegistTime());
+        customer.setCreateTime(detail.getMedicalDate());
+        customer.setLastUpdateTime(detail.getMedicalDate());
         if (detail.getC1Id() != null) { //县级
-            customer.setLpAreaId(detail.getC3Id().toString());
+            customer.setLpAreaId(detail.getC3Id());
             customer.setLpAreaName(detail.getC3Name());
-            customer.setLpCityId(detail.getC2Id().toString());
+            customer.setLpCityId(detail.getC2Id());
             customer.setLpCityName(detail.getC2Name());
-            customer.setLpProvId(detail.getC1Id().toString());
+            customer.setLpProvId(detail.getC1Id());
             customer.setLpProvName(detail.getC1Name());
         } else if (detail.getC2Id() != null) { //市级
-            customer.setLpCityId(detail.getC3Id().toString());
+            customer.setLpCityId(detail.getC3Id());
             customer.setLpCityName(detail.getC3Name());
-            customer.setLpProvId(detail.getC2Id().toString());
+            customer.setLpProvId(detail.getC2Id());
             customer.setLpProvName(detail.getC2Name());
         } else if (detail.getC3Id() != null) { //省会
-            customer.setLpProvId(detail.getC3Id().toString());
+            customer.setLpProvId(detail.getC3Id());
             customer.setLpProvName(detail.getC3Name());
         }
         return customer;
@@ -282,10 +372,12 @@ public class EYEDataServiceImpl implements EYEDataService {
         encounter.setDoctorAvatar(detail.getDoctorAvatar());
         encounter.setHospitalId(detail.getHospitalId());
         encounter.setHospitalName(detail.getHospitalName());
-//        encounter.setCover(detail.getMedicalCover());
+        encounter.setCover(detail.getMedicalCover());
         encounter.setVisitDate(detail.getMedicalDate());
         encounter.setDepartmentId(detail.getDepartmentId());
         encounter.setDepartmentName(detail.getDepartmentName());
+        encounter.setCreateTime(detail.getMedicalDate());
+        encounter.setLastUpdateTime(detail.getMedicalDate());
         return encounter;
     }
 

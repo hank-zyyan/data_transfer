@@ -49,13 +49,166 @@
     delete from t_general_examination
   </delete>
 
+  <update id="dropAll">
+    DROP TABLE IF EXISTS t_general_examination
+  </update>
+
+  <update id="createTableAll">
+CREATE TABLE `t_general_examination` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '主键ID',
+  `encrypt_id` varchar(64) DEFAULT NULL COMMENT '加密ID',
+  `encounter_id` int(11) DEFAULT NULL COMMENT '就诊记录ID',
+  `encounter_encrypt_id` varchar(64) DEFAULT NULL COMMENT '加密的就诊记录ID',
+  `collect_file` varchar(512) DEFAULT NULL COMMENT '图像采集',
+  `l_nv` varchar(8) DEFAULT NULL COMMENT '左眼裸眼视力（5分记录法）',
+  `r_nv` varchar(8) DEFAULT NULL COMMENT '右眼裸眼视力（5分记录法）',
+  `l_is_glasses` int(1) DEFAULT NULL COMMENT '左眼是否戴镜（0.未戴镜  1.戴镜  2.未知）',
+  `r_is_glasses` int(1) DEFAULT NULL COMMENT '右眼是否戴镜（0.未戴镜  1.戴镜  2.未知）',
+  `l_glasses_vision` varchar(8) DEFAULT NULL COMMENT '左眼戴镜视力（5分记录法）',
+  `r_glasses_vision` varchar(8) DEFAULT NULL COMMENT '右眼戴镜视力（5分记录法）',
+  `l_cva` varchar(8) DEFAULT NULL COMMENT '左眼矫正视力（5分记录法）',
+  `r_cva` varchar(8) DEFAULT NULL COMMENT '右眼矫正视力（5分记录法）',
+  `l_intraocular_pressure` varchar(8) DEFAULT NULL COMMENT '左眼眼压（单位：mmHg）',
+  `r_intraocular_pressure` varchar(8) DEFAULT NULL COMMENT '右眼眼压（单位：mmHg）',
+  `l_eye_position` varchar(8) DEFAULT NULL COMMENT '左眼眼位（1.正常 9.其他）',
+  `r_eye_position` varchar(8) DEFAULT NULL COMMENT '右眼眼位（1.正常 9.其他）',
+  `l_eye_movement` varchar(8) DEFAULT NULL COMMENT '左眼眼球运动（1.正常 9.其他）',
+  `r_eye_movement` varchar(8) DEFAULT NULL COMMENT '右眼眼球运动（1.正常 9.其他）',
+  `l_eyelids` varchar(8) DEFAULT NULL COMMENT '左眼眼睑（1.正常  2.内翻 3.外翻  4.肿块 5.血管瘤  6.倒睫 9.其他）',
+  `r_eyelids` varchar(8) DEFAULT NULL COMMENT '右眼眼睑（1.正常  2.内翻 3.外翻  4.肿块 5.血管瘤  6.倒睫 9.其他）',
+  `cover` varchar(128) DEFAULT NULL COMMENT '检查封面',
+  `remark` varchar(1024) DEFAULT NULL COMMENT '备注',
+  `note` varchar(1024) DEFAULT NULL COMMENT '检查简述',
+  `create_time` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `last_update_time` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '最后更新时间',
+  `is_delete` int(1) DEFAULT '0' COMMENT '删除标志（0：未删除，1：已删除）',
+  PRIMARY KEY (`id`),
+  KEY `fk_general_examination_encounter_idx` (`encounter_id`) USING BTREE,
+  CONSTRAINT `fk_encounter_general_examination` FOREIGN KEY (`encounter_id`) REFERENCES `t_encounter` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='一般检查';
+  </update>
+
   <delete id="deleteOptometry">
     delete from t_optometry
   </delete>
 
+  <update id="dropOptometry">
+    DROP TABLE IF EXISTS t_optometry
+  </update>
+
+  <update id="createTableOptometry">
+CREATE TABLE `t_optometry` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '主键ID',
+  `encrypt_id` varchar(64) DEFAULT NULL COMMENT '加密ID',
+  `encounter_id` int(11) DEFAULT NULL COMMENT '就诊记录ID',
+  `encounter_encrypt_id` varchar(64) DEFAULT NULL COMMENT '加密的就诊记录ID',
+  `collect_file` varchar(512) DEFAULT NULL COMMENT '图像采集',
+  `l_mydriasis` int(1) DEFAULT NULL COMMENT '左眼是否散瞳（0.未散瞳   1.已散瞳）',
+  `r_mydriasis` int(1) DEFAULT NULL COMMENT '右眼是否散瞳（0.未散瞳   1.已散瞳）',
+  `l_ar_sph` varchar(16) DEFAULT NULL COMMENT '左眼电脑验光 - 球镜（-20 ～ 20 DS  99 ～ 未知）',
+  `r_ar_sph` varchar(16) DEFAULT NULL COMMENT '右眼电脑验光 - 球镜（-20 ～ 20 DS  99 ～ 未知）',
+  `l_ar_cyl` varchar(16) DEFAULT NULL COMMENT '左眼电脑验光 - 柱镜（-15 ～ 0 DS  99 ～ 未知）',
+  `r_ar_cyl` varchar(16) DEFAULT NULL COMMENT '右眼电脑验光 - 柱镜（-15 ～ 0 DS  99 ～ 未知）',
+  `l_ar_axial` varchar(16) DEFAULT NULL COMMENT '左眼电脑验光 - 轴位（0 ～ 180  -1 ～ 未知）',
+  `r_ar_axial` varchar(16) DEFAULT NULL COMMENT '右眼电脑验光 - 轴位（0 ～ 180  -1 ～ 未知）',
+  `l_ar_ccv_horizontal` varchar(16) DEFAULT NULL COMMENT '左眼电脑验光 - 角膜曲率水平（35 ～ 65）',
+  `r_ar_ccv_horizontal` varchar(16) DEFAULT NULL COMMENT '右眼电脑验光 - 角膜曲率水平（35 ～ 65）',
+  `l_ar_ccv_verticality` varchar(16) DEFAULT NULL COMMENT '左眼电脑验光 - 角膜曲率垂直（35 ～ 65）',
+  `r_ar_ccv_verticality` varchar(16) DEFAULT NULL COMMENT '右眼电脑验光 - 角膜曲率垂直（35 ～ 65）',
+  `l_io_sph` varchar(16) DEFAULT NULL COMMENT '左眼插片验光 - 球镜（-20 ～ 20 DS  99 ～ 未知）',
+  `r_io_sph` varchar(16) DEFAULT NULL COMMENT '右眼插片验光 - 球镜（-20 ～ 20 DS  99 ～ 未知）',
+  `l_io_cyl` varchar(16) DEFAULT NULL COMMENT '左眼插片验光 - 柱镜（-15 ～ 0 DS  99 ～ 未知）',
+  `r_io_cyl` varchar(16) DEFAULT NULL COMMENT '右眼插片验光 - 柱镜（-15 ～ 0 DS  99 ～ 未知）',
+  `cover` varchar(128) DEFAULT NULL COMMENT '检查封面',
+  `remark` varchar(1024) DEFAULT NULL COMMENT '备注',
+  `note` varchar(1024) DEFAULT NULL COMMENT '检查简述',
+  `create_time` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `last_update_time` datetime DEFAULT CURRENT_TIMESTAMP,
+  `is_delete` int(1) DEFAULT '0' COMMENT '删除标志（0：未删除，1：已删除）',
+  PRIMARY KEY (`id`),
+  KEY `fk_optometry_encounter_idx` (`encounter_id`) USING BTREE,
+  CONSTRAINT `fk_encounter_optometry` FOREIGN KEY (`encounter_id`) REFERENCES `t_encounter` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='视力验光检查';
+  </update>
+
   <delete id="deleteVisionExam">
     delete from t_vision_exam
   </delete>
+
+  <update id="dropVisionExam">
+    DROP TABLE IF EXISTS t_vision_exam
+  </update>
+
+  <update id="createTableVisionExam">
+CREATE TABLE `t_vision_exam` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '主键ID',
+  `encrypt_id` varchar(64) DEFAULT NULL COMMENT '加密ID',
+  `encounter_id` int(11) DEFAULT NULL COMMENT '就诊记录ID',
+  `encounter_encrypt_id` varchar(64) DEFAULT NULL COMMENT '加密的就诊记录ID',
+  `collect_file` varchar(512) DEFAULT NULL COMMENT '图像采集(必须2张)',
+  `l_diopter` int(8) DEFAULT NULL COMMENT '左眼屈光度(整数，-1000至1000，正数为近视，负数为远视)',
+  `r_diopter` int(8) DEFAULT NULL COMMENT '右眼屈光度(整数，-1000至1000，正数为近视，负数为远视)',
+  `h_strabismus` int(4) DEFAULT NULL COMMENT '水平斜视(整数，-180至180)',
+  `v_strabismus` int(4) DEFAULT NULL COMMENT '垂直斜视(整数，-180至180)',
+  `red_flex_img` varchar(256) DEFAULT NULL COMMENT '屈光筛查眼周图像',
+  `hirschberg_img` varchar(256) DEFAULT NULL COMMENT '斜视筛查眼周放大图像',
+  `status` int(1) DEFAULT '0' COMMENT '检测状态（0:待检测 1:检测中 2:检测成功 3:检测失败）',
+  `cover` varchar(256) DEFAULT NULL COMMENT '封面',
+  `remark` varchar(1024) DEFAULT NULL COMMENT '备注',
+  `note` varchar(1024) DEFAULT NULL COMMENT '检查简述',
+  `create_time` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `last_update_time` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '最后更新时间',
+  `is_delete` int(1) DEFAULT '0' COMMENT '删除标志（0：未删除，1：已删除）',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='视力筛查检查';
+  </update>
+
+<update id="modifyReport">
+  ALTER TABLE t_report
+CHANGE COLUMN `record_id` `examine_id`  int(11) NOT NULL COMMENT '检查ID' AFTER `customer_id`,
+ADD COLUMN `examine_encrypt_id`  varchar(64) NULL COMMENT '加密的检查ID' AFTER `examine_id`,
+MODIFY COLUMN `report_type`  int(1) NULL DEFAULT 1 COMMENT '报告类型（1：咨询报告，2：会诊报告，3：诊断报告）' AFTER `share_id`,
+CHANGE COLUMN `record_type` `examine_type`  int(2) NOT NULL DEFAULT 2 COMMENT '检查类型（0：一般检查，1：视力验光，2：眼前节，3：眼底）' AFTER `report_type`,
+CHANGE COLUMN `patient_id` `customer_id`  int(11) NULL DEFAULT NULL COMMENT '客户ID' AFTER `doctor_avatar`,
+ADD COLUMN `customer_encrypt_id`  varchar(64) NULL COMMENT '加密的客户ID' AFTER `customer_id`,
+ADD COLUMN `encounter_id`  int(11) NULL COMMENT '就诊记录ID' AFTER `examine_type`,
+ADD COLUMN `encounter_encrypt_id`  varchar(64) NULL COMMENT '加密的就诊记录ID' AFTER `encounter_id`,
+MODIFY COLUMN `remarks`  varchar(256) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '备注' AFTER `eye_right_img`,
+MODIFY COLUMN `is_enterprise`  int(1) NULL DEFAULT 0 COMMENT '是否是企业报告（0：否，1：是），为了防止医生在非企业账户时候创建的报告会在成为企业账户时会被上级医生查看到' AFTER `remarks`,
+MODIFY COLUMN `electronic_signature`  varchar(128) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '电子签名OSS存储路径（signature文件夹下）' AFTER `is_enterprise`,
+ADD COLUMN `last_update_time`  datetime NULL DEFAULT CURRENT_TIMESTAMP COMMENT '最后更新时间' AFTER `create_time`
+</update>
+
+<update id="modifyConsultation">
+  ALTER TABLE `t_consultation`
+CHANGE COLUMN `record_id` `examine_id`  int(11) NOT NULL COMMENT '检查ID' AFTER `id`,
+CHANGE COLUMN `share_id` `examine_encrypt_id`  varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '加密的检查ID' AFTER `examine_id`,
+CHANGE COLUMN `record_type` `examine_type`  int(1) NULL COMMENT '检查类型（0：一般检查，1：视力验光，2：眼前节，3：眼底）' AFTER `id`,
+ADD COLUMN `last_update_time`  datetime NULL DEFAULT CURRENT_TIMESTAMP COMMENT '最后更新时间' AFTER `close_user_type`
+</update>
+
+  <update id="modifyAITask">
+    ALTER TABLE `t_ai_task`
+CHANGE COLUMN `record_id` `examine_id`  int(11) NULL DEFAULT NULL COMMENT '检查id' AFTER `doctor_id`,
+CHANGE COLUMN `record_type` `examine_type`  int(1) NULL DEFAULT NULL COMMENT '检查类型（0：一般检查，1：视力验光，2：眼前节，3：眼底）' AFTER `examine_id`,
+ADD COLUMN `examine_encrypt_id`  varchar(64) NULL COMMENT '加密的检查ID' AFTER `examine_id`,
+MODIFY COLUMN `create_time`  datetime NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间' AFTER `detection_result`,
+ADD COLUMN `last_update_time`  datetime NULL DEFAULT CURRENT_TIMESTAMP COMMENT '最后更新时间' AFTER `result_time`
+  </update>
+
+  <update id="modifyScreenInterval">
+    ALTER TABLE `t_screen_interval`
+CHANGE COLUMN `record_id` `examine_id`  int(11) NULL DEFAULT NULL COMMENT '检查id' AFTER `screen_date`,
+ADD COLUMN `examine_encrypt_id`  varchar(64) NULL COMMENT '加密的检查ID' AFTER `examine_id`,
+ADD COLUMN `last_update_time`  datetime NULL DEFAULT CURRENT_TIMESTAMP COMMENT '最后更新时间' AFTER `create_time`
+  </update>
+
+  <update id="modifyAIResult">
+    ALTER TABLE `t_ai_result`
+MODIFY COLUMN `create_time`  datetime NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间' AFTER `detection_status`,
+ADD COLUMN `last_update_time`  datetime NULL DEFAULT CURRENT_TIMESTAMP COMMENT '最后更新时间' AFTER `result_time`
+  </update>
+
 
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     <!--

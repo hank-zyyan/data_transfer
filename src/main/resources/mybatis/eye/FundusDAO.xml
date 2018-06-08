@@ -60,6 +60,54 @@
     delete from t_fundus
   </delete>
 
+  <update id="drop">
+    DROP TABLE IF EXISTS t_fundus
+  </update>
+
+  <update id="createTable">
+    CREATE TABLE `t_fundus` (
+    `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '主键ID',
+    `encrypt_id` varchar(64) DEFAULT NULL COMMENT '加密ID',
+    `encounter_id` int(11) DEFAULT NULL COMMENT '就诊记录ID',
+    `encounter_encrypt_id` varchar(64) DEFAULT NULL COMMENT '加密的就诊记录ID',
+    `left_img` varchar(512) DEFAULT NULL COMMENT '左眼图片',
+    `right_img` varchar(512) DEFAULT NULL COMMENT '右眼图片',
+    `left_video` varchar(64) DEFAULT NULL COMMENT '左眼视频',
+    `right_video` varchar(64) DEFAULT NULL COMMENT '右眼视频',
+    `collect_file` varchar(512) DEFAULT NULL COMMENT '图像采集',
+    `l_mydriasis` int(1) DEFAULT NULL COMMENT '左眼是否散瞳（0.未散瞳   1.已散瞳）',
+    `r_mydriasis` int(1) DEFAULT NULL COMMENT '右眼是否散瞳（0.未散瞳   1.已散瞳）',
+    `l_retina` varchar(8) DEFAULT NULL COMMENT '左眼视网膜（1.平状 2.水肿 3.出血 4.渗出 5.棉絮斑 6.纤维增值膜 7.脱离 8.变性 9.其他）',
+    `r_retina` varchar(8) DEFAULT NULL COMMENT '右眼视网膜（1.平状 2.水肿 3.出血 4.渗出 5.棉絮斑 6.纤维增值膜 7.脱离 8.变性 9.其他）',
+    `l_cd` varchar(16) DEFAULT NULL COMMENT '左眼C/D值（&lt;0.5   >=0.5，其他）',
+    `r_cd` varchar(16) DEFAULT NULL COMMENT '右眼角膜C/D值（&lt;0.5   >=0.5，其他）',
+    `l_optic_disc` varchar(8) DEFAULT NULL COMMENT '左眼视盘（1.边界清 2.充血水肿 3.新生血管  4.苍白 5.盘周萎缩  9.其他）',
+    `r_optic_disc` varchar(8) DEFAULT NULL COMMENT '右眼视盘（1.边界清 2.充血水肿 3.新生血管  4.苍白 5.盘周萎缩  9.其他）',
+    `l_vitreous_hemorrhage` int(1) DEFAULT NULL COMMENT '左眼玻璃体积血（1.是 2.否）',
+    `r_vitreous_hemorrhage` int(1) DEFAULT NULL COMMENT '右眼玻璃体积血（1.是 2.否）',
+    `l_diopter_opacification` int(1) DEFAULT NULL COMMENT '左眼屈光间质浑浊（1.是 2.否）',
+    `r_diopter_opacification` int(1) DEFAULT NULL COMMENT '右眼屈光间质浑浊（1.是 2.否）',
+    `l_av` varchar(32) DEFAULT NULL COMMENT '左眼A:V值',
+    `r_av` varchar(32) DEFAULT NULL COMMENT '右眼A:V值',
+    `l_retina_vasa` varchar(8) DEFAULT NULL COMMENT '左眼视网膜血管（1.正常 2.动静脉交叉症 3.动脉变细  4.动脉银丝 5.动脉铜丝  6.静脉扭曲扩张 7.静脉串珠 8.血管闭塞 9.血管白鞘  10.微动脉瘤 11.IRMA  12.视网膜新生血管 13.血管畸形 14.其他）',
+    `r_retina_vasa` varchar(8) DEFAULT NULL COMMENT '右眼视网膜血管（1.正常 2.动静脉交叉症 3.动脉变细  4.动脉银丝 5.动脉铜丝  6.静脉扭曲扩张 7.静脉串珠 8.血管闭塞 9.血管白鞘  10.微动脉瘤 11.IRMA  12.视网膜新生血管 13.血管畸形 14.其他）',
+    `l_macular_area` varchar(8) DEFAULT NULL COMMENT '左眼黄斑区（1.中心凹反光有  2.色素改变 3.玻璃膜疣  4.出血 5.水肿 6.表面膜 7.浆液性脱离 8.黄斑裂孔 9.其他）',
+    `r_macular_area` varchar(8) DEFAULT NULL COMMENT '右眼黄斑区（1.中心凹反光有  2.色素改变 3.玻璃膜疣  4.出血 5.水肿 6.表面膜 7.浆液性脱离 8.黄斑裂孔 9.其他）',
+    `l_peripheral_retina` varchar(8) DEFAULT NULL COMMENT '左眼周边视网膜（1.正常 2.脱离 3.格子样变性 4.霜样变性 5.铺路石样变 6.色素增生 7.不压迫变白 8.视网膜裂孔 9.坏死 10.其他）',
+    `r_peripheral_retina` varchar(8) DEFAULT NULL COMMENT '右眼周边视网膜（1.正常 2.脱离 3.格子样变性 4.霜样变性 5.铺路石样变 6.色素增生 7.不压迫变白 8.视网膜裂孔 9.坏死 10.其他）',
+    `cover` varchar(128) DEFAULT NULL COMMENT '检查封面',
+    `remark` varchar(1024) DEFAULT NULL COMMENT '备注',
+    `report_status` int(1) DEFAULT '0' COMMENT '0未出报告，1已出报告',
+    `note` varchar(1024) DEFAULT NULL COMMENT '检查简述',
+    `create_time` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    `last_update_time` datetime DEFAULT CURRENT_TIMESTAMP,
+    `is_delete` int(1) DEFAULT '0' COMMENT '删除标志（0：未删除，1：已删除）',
+    PRIMARY KEY (`id`),
+    KEY `fk_fundus_encounter_idx` (`encounter_id`) USING BTREE,
+    CONSTRAINT `fk_encounter_fundus` FOREIGN KEY (`encounter_id`) REFERENCES `t_encounter` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='眼底检查';
+  </update>
+
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     <!--
       WARNING - @mbg.generated

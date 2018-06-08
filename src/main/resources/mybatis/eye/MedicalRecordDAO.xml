@@ -71,11 +71,11 @@
     <result column="c_h_id" jdbcType="INTEGER" property="patientCreatedHid" />
     <result column="c_h_name" jdbcType="VARCHAR" property="patientCreatedHName" />
     <result column="c3_name" jdbcType="VARCHAR" property="c3Name" />
-    <result column="c3_id" jdbcType="INTEGER" property="c3Id" />
+    <result column="c3_id" jdbcType="VARCHAR" property="c3Id" />
     <result column="c2_name" jdbcType="VARCHAR" property="c2Name" />
-    <result column="c2_id" jdbcType="INTEGER" property="c2Id" />
+    <result column="c2_id" jdbcType="VARCHAR" property="c2Id" />
     <result column="c1_name" jdbcType="VARCHAR" property="c1Name" />
-    <result column="c1_id" jdbcType="INTEGER" property="c1Id" />
+    <result column="c1_id" jdbcType="VARCHAR" property="c1Id" />
     <result column="rpt" jdbcType="VARCHAR" property="rpt" />
     <result column="rpn" jdbcType="VARCHAR" property="rpn" />
     <result column="rpa" jdbcType="VARCHAR" property="rpa" />
@@ -128,24 +128,64 @@
     is_deleted
   </sql>
 
-  <select id="selectDetails" resultMap="DetailResultMap">
-    SELECT r.share_id,r.record_id,r.patient_id,r.doctor_id,r.medical_pictures,r.medical_video,r.type,r.medical_cover,r.medical_date,r.is_deleted,r.doctor_name,r.doctor_teleno,r.doctor_avatar,r.hospital_id,r.hospital_name,
+  <select id="selectDetailsDev" resultMap="DetailResultMap">
+    SELECT r.medical_conclusion,r.report_status,r.share_id,r.record_id,r.patient_id,r.doctor_id,r.medical_pictures,r.medical_video,r.type,r.medical_cover,r.medical_date,r.is_deleted,r.doctor_name,r.doctor_teleno,r.doctor_avatar,r.hospital_id,r.hospital_name,
     r.eye_left_img,r.eye_left_video,r.eye_left_vision,r.eye_right_img,r.eye_right_video,r.eye_right_vision,##眼睛数据
     p.patient_name,p.patient_sex,p.patient_birthday,p.patient_teleno,p.patient_avatar,p.create_by c_d_id,p.patient_status,p.regist_time,
     d.doctor_name c_d_name,d.hospital_id c_h_id,
     h.hospital_name c_h_name,
     r.department_id, r.department_name,
     r.patient_teleno rpt,r.patient_name rpn,r.patient_age rpa,r.patient_sex rps,
-    c3.city_id c3_id,c3.city_name c3_name,
-    c2.city_id c2_id,c2.city_name c2_name,
-    c1.city_id c1_id,c1.city_name c1_name
-    from eye_dev.t_medical_record r
+    c3.city_code c3_id,c3.city_name c3_name,
+    c2.city_code c2_id,c2.city_name c2_name,
+    c1.city_code c1_id,c1.city_name c1_name
+    from t_medical_record r
     LEFT JOIN basic_dev.t_patient p ON r.patient_id = p.patient_id
     LEFT JOIN basic_dev.t_doctor d ON p.create_by = d.doctor_id
     LEFT JOIN basic_dev.t_hospital h ON d.hospital_id = h.hospital_id
     LEFT JOIN basic_dev.t_city c3 ON p.city_id = c3.city_id
     LEFT JOIN basic_dev.t_city c2 ON c3.city_parent_code = c2.city_code
     LEFT JOIN basic_dev.t_city c1 ON c2.city_parent_code = c1.city_code
+  </select>
+
+  <select id="selectDetailsTest" resultMap="DetailResultMap">
+    SELECT r.medical_conclusion,r.report_status,r.share_id,r.record_id,r.patient_id,r.doctor_id,r.medical_pictures,r.medical_video,r.type,r.medical_cover,r.medical_date,r.is_deleted,r.doctor_name,r.doctor_teleno,r.doctor_avatar,r.hospital_id,r.hospital_name,
+    r.eye_left_img,r.eye_left_video,r.eye_left_vision,r.eye_right_img,r.eye_right_video,r.eye_right_vision,##眼睛数据
+    p.patient_name,p.patient_sex,p.patient_birthday,p.patient_teleno,p.patient_avatar,p.create_by c_d_id,p.patient_status,p.regist_time,
+    d.doctor_name c_d_name,d.hospital_id c_h_id,
+    h.hospital_name c_h_name,
+    r.department_id, r.department_name,
+    r.patient_teleno rpt,r.patient_name rpn,r.patient_age rpa,r.patient_sex rps,
+    c3.city_code c3_id,c3.city_name c3_name,
+    c2.city_code c2_id,c2.city_name c2_name,
+    c1.city_code c1_id,c1.city_name c1_name
+    from t_medical_record r
+    LEFT JOIN basic_test.t_patient p ON r.patient_id = p.patient_id
+    LEFT JOIN basic_test.t_doctor d ON p.create_by = d.doctor_id
+    LEFT JOIN basic_test.t_hospital h ON d.hospital_id = h.hospital_id
+    LEFT JOIN basic_test.t_city c3 ON p.city_id = c3.city_id
+    LEFT JOIN basic_test.t_city c2 ON c3.city_parent_code = c2.city_code
+    LEFT JOIN basic_test.t_city c1 ON c2.city_parent_code = c1.city_code
+  </select>
+
+  <select id="selectDetailsPro" resultMap="DetailResultMap">
+    SELECT r.medical_conclusion,r.report_status,r.share_id,r.record_id,r.patient_id,r.doctor_id,r.medical_pictures,r.medical_video,r.type,r.medical_cover,r.medical_date,r.is_deleted,r.doctor_name,r.doctor_teleno,r.doctor_avatar,r.hospital_id,r.hospital_name,
+    r.eye_left_img,r.eye_left_video,r.eye_left_vision,r.eye_right_img,r.eye_right_video,r.eye_right_vision,##眼睛数据
+    p.patient_name,p.patient_sex,p.patient_birthday,p.patient_teleno,p.patient_avatar,p.create_by c_d_id,p.patient_status,p.regist_time,
+    d.doctor_name c_d_name,d.hospital_id c_h_id,
+    h.hospital_name c_h_name,
+    r.department_id, r.department_name,
+    r.patient_teleno rpt,r.patient_name rpn,r.patient_age rpa,r.patient_sex rps,
+    c3.city_code c3_id,c3.city_name c3_name,
+    c2.city_code c2_id,c2.city_name c2_name,
+    c1.city_code c1_id,c1.city_name c1_name
+    from t_medical_record r
+    LEFT JOIN basic_pro.t_patient p ON r.patient_id = p.patient_id
+    LEFT JOIN basic_pro.t_doctor d ON p.create_by = d.doctor_id
+    LEFT JOIN basic_pro.t_hospital h ON d.hospital_id = h.hospital_id
+    LEFT JOIN basic_pro.t_city c3 ON p.city_id = c3.city_id
+    LEFT JOIN basic_pro.t_city c2 ON c3.city_parent_code = c2.city_code
+    LEFT JOIN basic_pro.t_city c1 ON c2.city_parent_code = c1.city_code
   </select>
 
 

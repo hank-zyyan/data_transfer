@@ -22,15 +22,39 @@ public class Detail {
     private Integer patientCreatedHid;
     private String patientCreatedHName;
     private String c3Name;
-    private Integer c3Id;
+    private String c3Id;
     private String c2Name;
-    private Integer c2Id;
+    private String c2Id;
     private String c1Name;
-    private Integer c1Id;
+    private String c1Id;
     private String rpt;
     private String rpa;
     private String rpn;
     private Integer rps;
+
+    public String getC3Id() {
+        return c3Id;
+    }
+
+    public void setC3Id(String c3Id) {
+        this.c3Id = c3Id;
+    }
+
+    public String getC2Id() {
+        return c2Id;
+    }
+
+    public void setC2Id(String c2Id) {
+        this.c2Id = c2Id;
+    }
+
+    public String getC1Id() {
+        return c1Id;
+    }
+
+    public void setC1Id(String c1Id) {
+        this.c1Id = c1Id;
+    }
 
     public String getRpt() {
         return rpt;
@@ -136,28 +160,12 @@ public class Detail {
         this.c3Name = c3Name;
     }
 
-    public Integer getC3Id() {
-        return c3Id;
-    }
-
-    public void setC3Id(Integer c3Id) {
-        this.c3Id = c3Id;
-    }
-
     public String getC2Name() {
         return c2Name;
     }
 
     public void setC2Name(String c2Name) {
         this.c2Name = c2Name;
-    }
-
-    public Integer getC2Id() {
-        return c2Id;
-    }
-
-    public void setC2Id(Integer c2Id) {
-        this.c2Id = c2Id;
     }
 
     public String getC1Name() {
@@ -168,13 +176,6 @@ public class Detail {
         this.c1Name = c1Name;
     }
 
-    public Integer getC1Id() {
-        return c1Id;
-    }
-
-    public void setC1Id(Integer c1Id) {
-        this.c1Id = c1Id;
-    }
 
     /**
      *
