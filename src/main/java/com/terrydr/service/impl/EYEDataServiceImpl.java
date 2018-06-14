@@ -302,7 +302,7 @@ public class EYEDataServiceImpl implements EYEDataService {
 
     private GeneralExamination createGeneralExamination(Detail detail, Integer eId, String ecptId){
         GeneralExamination generalExamination = new GeneralExamination();
-        generalExamination.setEncryptId(detail.getShareId());
+        generalExamination.setEncryptId(Util.getEncryptId());
         generalExamination.setEncounterId(eId);
         generalExamination.setEncounterEncryptId(ecptId);
         generalExamination.setlNv(detail.getEyeLeftVision());
